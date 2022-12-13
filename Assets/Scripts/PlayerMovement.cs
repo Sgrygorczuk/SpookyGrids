@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private float walkHeight = 0.5f;
     [SerializeField] private float jumpHeight = 1.5f;
-    private bool _isMoving;
+    [SerializeField] private bool _isMoving;
     private Vector3 _origin, _jump, _destination;
 
     private SpriteRenderer _spriteRenderer;
@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private int _spriteIndex = 0;
     
     private Collider _checkCollider;
+    [SerializeField] private LayerMask _layerMask;
     private bool _oneUnitHit;
     private bool _twoUnitHit;
     RaycastHit m_Hit;
@@ -98,12 +99,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void DetectObstacles()
     {
-        _oneUnitHit = Physics.BoxCast(_checkCollider.bounds.center + Vector3.up/2, transform.localScale/4, transform.forward, out m_Hit, transform.rotation, maxDistance);
-        _twoUnitHit = Physics.BoxCast(_checkCollider.bounds.center + Vector3.up/2 + transform.forward, transform.localScale/4, transform.forward, out m_Hit, transform.rotation, maxDistance);
+        _oneUnitHit = Physics.BoxCast(_checkCollider.bounds.center + Vector3.up/2, transform.localScale/4, transform.forward, out m_Hit, transform.rotation, maxDistance, _layerMask);
+        _twoUnitHit = Physics.BoxCast(_checkCollider.bounds.center + Vector3.up/2 + transform.forward, transform.localScale/4, transform.forward, out m_Hit, transform.rotation, maxDistance, _layerMask);
     }
-    
-    
 
+    public void PlayerMoving() { _isMoving = true; }
+    
+    public void PlayerNoLongerMoving(){ _isMoving = false; }
 
     //Draw the BoxCast as a gizmo to show where it currently is testing. Click the Gizmos button to see this
     private void OnDrawGizmos()
@@ -181,5 +183,4 @@ public class PlayerMovement : MonoBehaviour
 
         _isMoving = true;
     }
-    
 }
